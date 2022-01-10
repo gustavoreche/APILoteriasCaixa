@@ -49,5 +49,6 @@ public class MontadorDeLoteriaPorSite implements MontadorDeLoteria {
 	public void defineUrl(String urlCompleta) {
 		this.urlCompleta = urlCompleta;
 	}
+	
 
 }
