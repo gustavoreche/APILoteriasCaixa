@@ -6,16 +6,21 @@ import java.io.InputStreamReader;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 import br.com.loterias.aplicacao.loteria.MontaResultado;
 import br.com.loterias.aplicacao.loteria.MontadorDeLoteria;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class MontadorDeLoteriaPorSite implements MontadorDeLoteria {
 
 	private MontaResultado<?> montaResultado;
@@ -31,10 +36,19 @@ public class MontadorDeLoteriaPorSite implements MontadorDeLoteria {
 	private Object montaOTipoDeLoteria(URL url) throws IOException {
 		String linhaDoCodigoFonteDaCaixa;
 		
-		HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
 		
-		BufferedReader linhas = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		Document doc = Jsoup.connect("https://loterias.caixa.gov.br/wps/portal/loterias").get();
+        Elements media = doc.select("ul");
+
+        for (Element src : media) {
+        	if(src.getElementsByClass("resultado-loteria mega-sena") != null &&
+        			!src.getElementsByClass("resultado-loteria mega-sena").isEmpty()) {
+        		log.info("TESTE: " + src.getElementsByClass("resultado-loteria mega-sena"));
+        	}
+        }
+		
+		
+		BufferedReader linhas = new BufferedReader(new InputStreamReader(url.openStream()));
 		while ((linhaDoCodigoFonteDaCaixa = linhas.readLine()) != null) {
 			if (!this.montaResultado.executa(linhaDoCodigoFonteDaCaixa)) {
 				linhas.close();
@@ -54,6 +68,5 @@ public class MontadorDeLoteriaPorSite implements MontadorDeLoteria {
 	public void defineUrl(String urlCompleta) {
 		this.urlCompleta = urlCompleta;
 	}
-	
 
 }
