@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -29,7 +30,11 @@ public class MontadorDeLoteriaPorSite implements MontadorDeLoteria {
 
 	private Object montaOTipoDeLoteria(URL url) throws IOException {
 		String linhaDoCodigoFonteDaCaixa;
-		BufferedReader linhas = new BufferedReader(new InputStreamReader(url.openStream()));
+		
+		HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+		
+		BufferedReader linhas = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		while ((linhaDoCodigoFonteDaCaixa = linhas.readLine()) != null) {
 			if (!this.montaResultado.executa(linhaDoCodigoFonteDaCaixa)) {
 				linhas.close();
