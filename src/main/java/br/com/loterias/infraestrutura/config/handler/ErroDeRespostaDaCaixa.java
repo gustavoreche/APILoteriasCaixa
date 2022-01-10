@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.com.loterias.dominio.handler.ErroRetornadoPelaCaixa;
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class ErroDeRespostaDaCaixa {
 	
 	private static final String ERRO_CAIXA = "O site da CAIXA não retornou os dados! Tente novamente";
