@@ -1,12 +1,12 @@
 package br.com.loterias.infraestrutura.util;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 
 import org.apache.http.HttpEntity;
@@ -24,6 +24,9 @@ import org.springframework.stereotype.Component;
 import br.com.loterias.aplicacao.loteria.MontaResultado;
 import br.com.loterias.aplicacao.loteria.MontadorDeLoteria;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 @Component
 @Slf4j
@@ -45,12 +48,28 @@ public class MontadorDeLoteriaPorSite implements MontadorDeLoteria {
 		log.info("entrou no log");
 		
 
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpGet requestGet = new HttpGet("https://loterias.caixa.gov.br/wps/portal/loterias");
-        HttpResponse response = client.execute(requestGet);
-        HttpEntity entity = response.getEntity();
-        String responseString = EntityUtils.toString(entity, "UTF-8");
-		Document doc = Jsoup.parse(responseString);
+//        HttpClient client = HttpClientBuilder.create().build();
+//        HttpGet requestGet = new HttpGet("https://loterias.caixa.gov.br/wps/portal/loterias");
+//        HttpResponse response = client.execute(requestGet);
+//        HttpEntity entity = response.getEntity();
+//        String responseString = EntityUtils.toString(entity, "UTF-8");
+        
+        
+        String fixieUrl = System.getenv("FIXIE_URL");
+        String[] fixieValues = fixieUrl.split("[/(:\\/@)/]+");
+        String fixieUser = fixieValues[1];
+        String fixiePassword = fixieValues[2];
+        String fixieHost = fixieValues[3];
+        int fixiePort = Integer.parseInt(fixieValues[4]);
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+        clientBuilder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(fixieHost, fixiePort)));
+
+        OkHttpClient client = clientBuilder.build();
+        Request request = new Request.Builder().url("http:/loterias.caixa.gov.br/wps/portal/loterias").build();
+        Response response = client.newCall(request).execute();
+        
+        
+		Document doc = Jsoup.parse(response.body().toString());
 		
 		
 //		Document doc = Jsoup.connect("https://loterias.caixa.gov.br/wps/portal/loterias")
