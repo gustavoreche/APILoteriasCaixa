@@ -41,6 +41,8 @@ public class MontadorDeLoteriaPorSite implements MontadorDeLoteria {
 
 	private Object montaOTipoDeLoteria(URL url) throws IOException {
 		String linhaDoCodigoFonteDaCaixa;
+		System.out.println("entrou");
+		log.info("entrou no log");
 		
 
         HttpClient client = HttpClientBuilder.create().build();
