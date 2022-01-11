@@ -9,6 +9,12 @@ import java.net.CookiePolicy;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,10 +42,18 @@ public class MontadorDeLoteriaPorSite implements MontadorDeLoteria {
 	private Object montaOTipoDeLoteria(URL url) throws IOException {
 		String linhaDoCodigoFonteDaCaixa;
 		
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet requestGet = new HttpGet("https://loterias.caixa.gov.br/wps/portal/loterias");
+        HttpResponse response = client.execute(requestGet);
+        HttpEntity entity = response.getEntity();
+        String responseString = EntityUtils.toString(entity, "UTF-8");
+		Document doc = Jsoup.parse(responseString);
 		
-		Document doc = Jsoup.connect("https://loterias.caixa.gov.br/wps/portal/loterias")
-				.userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
-				.get();
+		
+//		Document doc = Jsoup.connect("https://loterias.caixa.gov.br/wps/portal/loterias")
+//				.userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
+//				.get();
         Elements media = doc.select("ul");
 
         for (Element src : media) {
