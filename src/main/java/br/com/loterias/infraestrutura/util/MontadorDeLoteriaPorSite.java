@@ -59,20 +59,20 @@ public class MontadorDeLoteriaPorSite implements MontadorDeLoteria {
         for (Element src : media) {
         	if(src.getElementsByClass("resultado-loteria mega-sena") != null &&
         			!src.getElementsByClass("resultado-loteria mega-sena").isEmpty()) {
-        		log.info("TESTE: " + src.getElementsByClass("resultado-loteria mega-sena"));
+        		System.out.println("TESTE: " + src.getElementsByClass("resultado-loteria mega-sena"));
         	}
         }
-		return null;
 		
 //		BufferedReader linhas = new BufferedReader(new InputStreamReader(url.openStream()));
 //		while ((linhaDoCodigoFonteDaCaixa = linhas.readLine()) != null) {
-//			if (!this.montaResultado.executa(linhaDoCodigoFonteDaCaixa)) {
+        while ((linhaDoCodigoFonteDaCaixa = responseString) != null) {
+			if (!this.montaResultado.executa(linhaDoCodigoFonteDaCaixa)) {
 //				linhas.close();
-//				return this.montaResultado.objetoMontado();
-//			}
-//		}
+				return this.montaResultado.objetoMontado();
+			}
+		}
 //		linhas.close();
-//		return this.montaResultado.objetoMontado();
+		return this.montaResultado.objetoMontado();
 	}
 
 	@Override
