@@ -4,9 +4,8 @@ Esta API foi desenvolvida para retornar o último resultado das loterias da CAIX
 
 ## Heroku
 
-Eu hospedei ela no `heroku`, e para realizar o primeiro acesso, demora cerca de 40s a 80s. Segue abaixo o link do `swagger`:
+Eu hospedei ela no `heroku`, porém para realizar o scraping pelo Heroku, esta dando erro. Removi ela do Heroku e esta API irá passar por uma refatoração em breve.
 
-http://api-loterias-caixa.herokuapp.com/swagger-ui.html
 
 ## Contribuições
 
